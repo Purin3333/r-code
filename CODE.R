@@ -79,11 +79,13 @@ wordcloud2(wordfreqs[1:200,],
 
 #LDA model
 library(topicmodels)
-binomial_dtm_cleaned <- binomial_dtm[!empty_docs, ] #dele empty doc
+library(slam)
+empty_docs <- slam::row_sums(binomial_dtm) > 0
+binomial_dtm_cleaned <- binomial_dtm[empty_docs, ] #dele empty doc
 lda <- LDA(binomial_dtm_cleaned, k = 5)
-terms(lda, 20)#topic
+terms(lda, 10)#topic
 
-
+ 
 #file1
 tokens1 <- Boost_tokenizer(corpus)
 clean_tokens1<-removePunctuation(tokens1)
@@ -115,6 +117,9 @@ cleaned_corpus1<-tm_map(cleaned_corpus1,stemDocument) #corpus
 dtm1 <- DocumentTermMatrix(cleaned_corpus1)
 
 #LDA model
+empty_docs <- slam::row_sums(binomial_dtm) > 0
+
+binomial_dtm_cleaned <- binomial_dtm[empty_docs, ]
 dtm1_cleaned <- dtm1[!empty_docs, ] #dele empty doc
 lda1 <- LDA(dtm1_cleaned, k = 17)
 terms(lda1, 10)#topic
